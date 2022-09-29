@@ -1,5 +1,4 @@
 # testy_recipes_django
-# restapi_jwt
 
 After Cloning project Follow below steps
 
