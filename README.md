@@ -1,5 +1,8 @@
 # testy_recipes_django
 
+https://tastyrecipes8.herokuapp.com/
+
+
 After Cloning project Follow below steps
 
 
