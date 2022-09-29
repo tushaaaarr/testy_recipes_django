@@ -1,0 +1,73 @@
+{% extends 'user/basic.html' %}
+{%load static%}
+{% block title %} {{recipe.food_name}}{% endblock title %}
+{%block style%}
+{%endblock style%}
+{% block body %}
+<div class='container'>
+    <div class="container">
+        <h4 class="text-center mt-5 text-uppercase font-bold">{{recipe.food_name}}</h4>
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center m-5 p-5 mt-0">
+                    <img src="/media/{{recipe.image}}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="receipe-content-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <div class="receipe-headline my-5">
+                        <p>{{recipe.desc}}</p>
+                        <span class="text-muted">{{recipe.pub_date}}</span>
+                        <br>
+                        <small class="text-success">Category:
+                            {%if recipe.category == "2" %}
+                            <span class="text-danger">Non-Vegetarian
+                                {%else%}
+                                Vegetarian
+                                {%endif%}
+                            </span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class='container'>
+                <h2>Steps</h2>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    {%for step in recipe.steps %}
+                    <div class="card mb-3" style='border:none;'>
+                        <div class='step_img text-center' style='width:500px;'>
+                            <img src="/media/media/{{step.image}}" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title"> 0.{{forloop.counter}}</h5>
+                            <p class="card-text">{{step.step}}.</p>
+                        </div>
+                    </div>
+                    {%endfor%}
+                </div>
+                <!-- Ingredients -->
+                <div class="col-12 col-lg-4">
+                    <div class="ingredients">
+                        <h4>Ingredients</h4>
+                        {%for ingrd in recipe.ingredients %}
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1">
+                            <label class="custom-control-label" for="customCheck1">{{ingrd}}</label>
+                        </div>
+                        {%endfor%}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <img class="pinterest-img" {% comment %}
+            src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
+            {% endcomment %} alt="" />
+        <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+        {% endblock body %}

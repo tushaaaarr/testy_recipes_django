@@ -1,0 +1,95 @@
+{% extends 'user/basic.html' %}
+{% load static %}
+{% block title %}
+TastyRecipes - My-recipes
+{% endblock %}
+{% block css %}
+<style>
+    .sorting_box {
+        width: 200px;
+        margin-left: auto;
+    }
+
+    .card {
+        width: 23rem;
+        height: 28rem;
+    }
+
+    .card img {
+        width: 300px;
+        height: 200px;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container w-50 mb-3">
+    <form>
+        <select class="form-control sorting_box" name="sort" id="sort-list" onchange="location = finalurl();">
+            <option class='my-1' value="">Sort-category</option>
+            {%if ordering == "1" %}
+            <option class='my-1' value="1" selected>Vegetarian</option>
+            <option class='my-1' value="2">Non-Vegetarian</option>
+            {%elif ordering == "2" %}
+            <option class='my-1' value="2" selected>Non-Vegetarian</option>
+            <option class='my-1' value="1">Vegetarian</option>
+            {%else%}
+            <option class='my-1' value="1">Vegetarian</option>
+            <option class='my-1' value="2">Non-Vegetarian</option>
+            {%endif%}
+        </select>
+    </form>
+</div>
+<div class="container">
+    <div class="row">
+        {% for recipe in recipes %}
+        <div class="card mx-auto my-2 p-2 align-items-center">
+            <a href="/view-recipe/{{recipe.id}}">
+                <img src="/media/{{recipe.image}}" class="padded card-img-top"></a>
+            <div class="card-body">
+                <h5 class="card-title text-center">
+                    {{recipe.food_name}}</h5>
+                <p class="card-text text-center">
+                    <a style="text-decoration:none;" class='text-dark' href="/view-recipe/{{recipe.id}}">{{recipe.desc |
+                        truncatechars:100}}</a>
+                </p>
+                <p class="card-text">
+                    <small class="text-success">Category:
+                        {%if recipe.category == "2" %}
+                        <span class="text-danger">Non-Vegetarian
+                            {%else%}
+                            Vegetarian
+                            {%endif%}
+                        </span>
+                    </small>
+                </p>
+                <div class="row">
+                    <p class="card-text"><small class="text-muted">Posted on {{recipe.pub_date}} </small></p>
+                    <a href='/update-recipe/{{recipe.id}}' class=" ml-auto mr-5">
+                        <button class="btn btn-success">Edit <i class='fa fa-edit'></i>
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+        </section>
+    </div>
+</div>
+</div>
+</section>
+{% endblock %}
+{% block script %}
+
+<script>
+    // for getting url after applying ordering
+    function finalurl() {
+        var url = new URL(window.location.href);
+        var search_params = url.searchParams;
+        search_params.set('ordering', document.getElementById("sort-list").value);
+        url.search = search_params.toString();
+        var new_url = url.toString();
+        return new_url
+    }
+
+</script>
+{% endblock %}

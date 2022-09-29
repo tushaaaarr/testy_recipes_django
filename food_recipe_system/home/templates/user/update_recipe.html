@@ -1,0 +1,143 @@
+{% extends 'user/basic.html' %}
+{% load static %}
+{% block title %}
+Update Recipe{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <br>
+    <h5 class="text-center mb-5">Update {{recipe.food_name}} </h5>
+    <form method='POST' action="/update-recipe/{{recipe.id}}" enctype="multipart/form-data">
+        {%csrf_token%}
+        <div class="form-group">
+            <label for="name">Recipe Name</label>
+            <input type="text" class="form-control" name='name' value="{{recipe.food_name}}">
+        </div>
+        <div class="form-group">
+            <label for="sel1">Select Category:</label>
+            <select class="form-control" id="sel1" name="category">
+                {%if recipe.category == '1' %}
+                <option value="1" selected>Vegetarian</option>
+                <option value="2">Non-Vegetarian</option>
+                {%else%}
+                <option value="2" selected>Non-Vegetarian</option>
+                <option value="1">Vegetarian</option>
+                {%endif%}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="recipe_image">Recipe Image</label>
+            <br>
+            <input type="file" name="recipe_image" id="recipe_image" value="" />
+        </div>
+        <div class="form-group">
+            <label for="desc">Description</label>
+            <textarea type="text" class="form-control" name='desc' rows="4" cols="50">{{recipe.desc}}</textarea>
+        </div>
+        <div class="form-group ">
+            <label for="ingredients">Recipe Ingredients</label>
+            {%for ingred in recipe.ingredients%}
+            <input type="text" class="form-control mb-2" name="ingredients" value='{{ingred}}'>
+            {%endfor%}
+        </div>
+        <div id="ingredient_row">
+        </div>
+        <div id="add_ingredient">
+            <div class="input-group-btn mt-3">
+                <button class="btn btn-success" type="button" onclick="ingredient_row();">
+                    <span>Add Ingredient</span> </button>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <br>
+        <div class='' id="add_steps">
+            <div class="form-group ">
+                <label for="ingredients">Recipe Steps</label>
+                {%for step in recipe.steps%}
+                <div class="row mb-3">
+                    <div class="col-12 col-md-6   ">
+                        <textarea type="text" class="form-control" id="steps" name="steps" rows="4" cols="50"
+                            placeholder="Step">{{step.step}}</textarea>
+                    </div>
+                    <div class="col-12 col-md-6 mt-5">
+                        <input type="hidden" id="hidden_imgs" name="hidden_imgs">
+                        <input type="file" name="images"
+                            class="custom-file-container__custom-file__custom-file-input img_cls"
+                            oninput="func_n(this.id,this.value)" accept="*" multiple aria-label="{{step.image}}"
+                            id="{{forloop.counter}}" />
+                    </div>
+                </div>
+                {%endfor%}
+                <div id="steps_row">
+                </div>
+                <div class='' id="add_steps">
+                    <div class="input-group-btn mt-3">
+                        <button class="btn btn-success" type="button" onclick="steps_row();">
+                            <span>Add Step</span> </button>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="clear"></div>
+                <div class="container mt-5 text-center">
+                    <button type="submit" class="btn btn-primary" id="submit_btn">Update</button>
+                </div>
+    </form>
+</div>
+<br>
+</section>
+
+{% endblock %}
+{% block script %}
+<script>
+    var room = 1;
+    function steps_row() {
+        room++;
+        var objTo = document.getElementById('steps_row')
+        var divtest = document.createElement("div");
+        divtest.setAttribute("class", "form-group remove_step" + room);
+        var rdiv = 'remove_step' + room;
+        divtest.innerHTML = '<div class=""><div class="row"><div class="col-12 col-md-6"><textarea type="text" class="form-control" id="steps" name="steps" placeholder="Step -' + room + '"></textarea></div><div class="col-12 col-md-6"><input type="file" name="images" class="custom-file-container__custom-file__custom-file-input"accept="*" multiple aria-label="Choose File" required/><div class="input-group-btn"><button class="btn-danger mt-3 btm-sm" type="button" onclick="remove_steps_row(' + room + ');"><span >Remove</span> </button></div></div><div class="clear"></div></div></div>';
+        objTo.appendChild(divtest)
+    }
+    function remove_steps_row(rid) {
+        $('.remove_step' + rid).remove();
+    }
+</script>
+
+<script>
+    var room_ingredient = 1;
+    function ingredient_row() {
+        room_ingredient++;
+        var objTo = document.getElementById('ingredient_row')
+        var divtest = document.createElement("div");
+        divtest.setAttribute("class", "form-group remove_ingredient" + room_ingredient);
+        var rdiv = 'remove_ingredient' + room_ingredient;
+        divtest.innerHTML = '<div class="row" ><div class="col-12 col-md-6"> <input type="text" class="form-control" id="ingredients" name="ingredients" placeholder="ingredient -' + room_ingredient + '"></div><div class="col-12 col-md-4"><button class="btn-danger btm-sm" type="button" onclick="remove_ingredient_row(' + room_ingredient + ');"><span >Remove</span> </button></div></div>';
+        objTo.appendChild(divtest)
+    }
+    function remove_ingredient_row(rid) {
+        $('.remove_ingredient' + rid).remove();
+    }
+</script>
+<script>
+    // let fileName = 'hasFilename.jpg'
+    // let file = new File([img], fileName,{type:"image/jpeg", lastModified:new Date().getTime()}, 'utf-8');
+    // let container = new DataTransfer(); 
+    // container.items.add(file);
+    // document.getElementById('recipe_image').files = container.files;
+
+    var updated_imgs = []
+    function func_n(id, val) {
+        val = val.replace(/^C:\\fakepath\\/i, '')
+        var element = {
+            'id': id,
+            'val': val
+        }
+        updated_imgs.push(element)
+        document.getElementById('hidden_imgs').value = JSON.stringify(updated_imgs)
+    }
+</script>
+{% endblock %}
